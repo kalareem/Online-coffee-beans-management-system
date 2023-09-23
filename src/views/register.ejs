@@ -1,0 +1,140 @@
+<%- include('./components/bootstrap'); %>
+
+<section class="vh-100">
+  <div class="container-fluid">
+    <div class="row d-flex justify-content-center align-items-center">
+      <div class="col-sm-6 text-black">
+        <div class="d-flex align-items-center justify-content-center">
+          <form style="width: 34rem" action="/register" method="POST">
+            <h3 class="fw-normal mb-3 pb-3" style="letter-spacing: 1px">
+              Create Account
+            </h3>
+
+            <div class="row form-outline mb-4">
+              <div class="col-sm-6">
+                <label class="form-label">First Name</label>
+                <input
+                  type="text"
+                  name="fname"
+                  class="form-control form-control-lg"
+                  value="<%= input.fname %>"
+                  required
+                />
+              </div>
+              <div class="col-sm-6">
+                <label class="form-label">Last Name</label>
+                <input
+                  type="text"
+                  name="lname"
+                  class="form-control form-control-lg"
+                  value="<%= input.lname %>"
+                  required
+                />
+              </div>
+            </div>
+
+            <div class="form-outline mb-4">
+              <div class="form-check form-check-inline">
+                <input
+                  class="form-check-input"
+                  type="radio"
+                  name="sex"
+                  value="female"
+                  required
+                  <%= input.sex == "female" ? 'checked' : '' %>
+                />
+                <label class="form-check-label">Female</label>
+              </div>
+              <div class="form-check form-check-inline">
+                <input
+                  class="form-check-input"
+                  type="radio"
+                  name="sex"
+                  value="male"
+                  required
+                  <%= input.sex == "male" ? 'checked' : '' %>
+                />
+                <label class="form-check-label">Male</label>
+              </div>
+            </div>
+
+            <div class="form-outline mb-4">
+              <label class="form-label">Email</label>
+              <input
+                type="email"
+                name="email"
+                class="form-control form-control-lg <%= error.email ? 'is-invalid' : '' %>"
+                value="<%= input.email %>"
+                required
+              />
+              <div class="invalid-feedback"><%= error.email_message %></div>
+            </div>
+
+            <div class="form-outline mb-4">
+              <label class="form-label">Password</label>
+              <input
+                id="password"
+                type="password"
+                name="password"
+                class="form-control form-control-lg"
+                required
+              />
+            </div>
+
+            <div class="form-outline mb-4">
+              <label class="form-label">Confirm Password</label>
+              <input
+                id="password_confirm"
+                type="password"
+                name="password_confirm"
+                class="form-control form-control-lg"
+                required
+              />
+            </div>
+
+            <div class="form-outline mb-4">
+              <label class="form-label">Phone</label>
+              <input
+                type="text"
+                name="phone"
+                class="form-control form-control-lg"
+                value="<%= input.phone %>"
+                required
+              />
+            </div>
+
+            <div class="d-grid gap-2">
+              <button class="btn btn-dark btn-lg btn-block" type="submit">
+                CREATE ACCOUNT
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+      <div class="col-sm-6 px-0 d-none d-sm-block">
+        <img
+          src="/static/images/bg-register.png"
+          alt="Login image"
+          class="w-100 vh-100"
+          style="object-fit: cover; object-position: left"
+        />
+      </div>
+    </div>
+  </div>
+</section>
+
+<script>
+  var password = document.getElementById("password"),
+    confirm_password = document.getElementById("password_confirm");
+
+  function validatePassword() {
+    if (password.value != confirm_password.value) {
+      confirm_password.setCustomValidity("Passwords Don't Match");
+    } else {
+      confirm_password.setCustomValidity("");
+    }
+  }
+
+  password.onchange = validatePassword;
+  confirm_password.onkeyup = validatePassword;
+</script>

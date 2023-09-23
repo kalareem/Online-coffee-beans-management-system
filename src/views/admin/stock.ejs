@@ -1,0 +1,148 @@
+<%- include('../components/bootstrap'); %> <%- include('./components/navbar');
+%>
+
+<section class="py-5">
+  <div class="container">
+    <!-- show -->
+    <table class="table table-striped">
+      <thead class="table-dark">
+        <tr class="text-center">
+          <th scope="col">picture</th>
+          <th scope="col">name</th>
+          <th scope="col">quantity</th>
+          <th scope="col">shelf number</th>
+          <th scope="col">shelf level</th>
+          <th scope="col">action</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% for (let stock of stocks) {%>
+        <tr>
+          <td>
+            <img
+              class="card-img-top"
+              src="/upload/<%= stock.picture %>"
+              style="width: 100%; min-height: 250px; max-height: 18rem"
+            />
+          </td>
+          <td><%= stock.name %></td>
+          <td><%= stock.quantity %></td>
+          <td><%= stock.shelf_number %></td>
+          <td><%= stock.shelf_level %></td>
+          <td>
+            <div class="d-flex justify-content-center align-items-center">
+              <button
+                class="btn btn-warning"
+                type="button"
+                style="margin-right: 5px"
+                data-bs-toggle="modal"
+                data-bs-target="#editModal"
+                onclick="editStock('<%= stock.id %>', '<%= stock.quantity %>', '<%= stock.shelf_number %>', '<%= stock.shelf_level %>', '<%= stock.picture %>')"
+              >
+                EDIT
+              </button>
+            </div>
+          </td>
+        </tr>
+        <% } %>
+      </tbody>
+    </table>
+
+    <!-- edit  -->
+    <div
+      class="modal fade"
+      id="editModal"
+      tabindex="-1"
+      aria-labelledby="editModal"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLabel">Edit Stock</h5>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+              aria-label="Close"
+            ></button>
+          </div>
+          <div class="modal-body">
+            <div class="modal-body d-flex justify-content-center">
+              <!-- edit  -->
+              <div
+                class="card d-flex justify-content-center"
+                style="width: 25rem"
+              >
+                <form
+                  action="/admin/stock"
+                  method="POST"
+                  enctype="multipart/form-data"
+                >
+                  <img
+                    id="previewImage"
+                    class="card-img-top"
+                    style="width: 100%"
+                  />
+                  <input id="id" name="id" hidden required/>
+                  <div class="card-body p-4">
+                    <div class="text-center">
+                      <input
+                        id="quantity"
+                        type="number"
+                        class="form-control"
+                        name="quantity"
+                        placeholder="quantity"
+                        required
+                      />
+                    </div>
+                    <div class="text-center pt-3">
+                      <input
+                        id="shelf_number"
+                        type="number"
+                        class="form-control"
+                        name="shelf_number"
+                        placeholder="shelf number"
+                        required
+                      />
+                    </div>
+                    <div class="text-center pt-3">
+                      <input
+                        id="shelf_level"
+                        type="number"
+                        class="form-control"
+                        name="shelf_level"
+                        placeholder="shelf level"
+                        required
+                      />
+                    </div>
+                  </div>
+                  <div class="card-footer p-4 pt-0 border-top-0 bg-transparent">
+                    <button
+                      class="btn btn-light"
+                      type="submit"
+                      style="width: 100%"
+                    >
+                      SAVE
+                    </button>
+                  </div>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<script>
+  function editStock(id, quantity, shelf_number, shelf_level, picture) {
+    document.getElementById("previewImage").src = `/upload/${picture}`;
+
+    document.getElementById("id").value = id;
+    document.getElementById("quantity").value = quantity;
+    document.getElementById("shelf_number").value = shelf_number;
+    document.getElementById("shelf_level").value = shelf_level;
+  }
+</script>

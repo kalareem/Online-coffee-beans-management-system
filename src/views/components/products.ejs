@@ -1,0 +1,43 @@
+<div class="row">
+  <% for (let product of products) {%>
+  <div class="col-md-12 col-lg-4 mb-4 mb-lg-0 p-4">
+    <div class="card" onclick="goProductDetail('<%= product.id %>')">
+      <div class="bg-image">
+        <img
+          src="/upload/<%= product.picture %>"
+          class="card-img-top"
+          alt="<%= product.name %>"
+        />
+      </div>
+      <div class="card-body">
+        <!-- <div class="d-flex justify-content-between">
+            <p class="small"><a href="#!" class="text-muted">Laptops</a></p>
+            <p class="small text-danger"><s>$1099</s></p>
+          </div> -->
+        <div class="d-flex justify-content-between mb-3">
+          <h5 class="mb-0"><%= product.name %></h5>
+          <h5 class="text-dark mb-0"><%= product.price %></h5>
+        </div>
+      </div>
+    </div>
+  </div>
+  <% } %>
+</div>
+
+<style>
+  .card {
+    transition: all 0.2s ease;
+    cursor: pointer;
+  }
+
+  .card:hover {
+    box-shadow: 5px 6px 6px 2px #e9ecef;
+    transform: scale(1.1);
+  }
+</style>
+
+<script>
+  function goProductDetail(id) {
+    window.location.href = "/shop/" + id;
+  }
+</script>

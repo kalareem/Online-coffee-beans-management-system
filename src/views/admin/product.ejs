@@ -1,0 +1,345 @@
+<%- include('../components/bootstrap'); %> 
+<%- include('./components/navbar');%>
+
+<section class="py-5">
+  <div class="container">
+    <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+      <button
+        type="button"
+        class="btn btn-primary"
+        data-bs-toggle="modal"
+        data-bs-target="#addProductModal"
+      >
+        Add Product
+      </button>
+    </div>
+
+    <!-- modal add product -->
+    <div
+      class="modal fade"
+      id="addProductModal"
+      tabindex="-1"
+      aria-labelledby="addProductModal"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLabel">Add Product</h5>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+              aria-label="Close"
+            ></button>
+          </div>
+          <div class="modal-body d-flex justify-content-center">
+            <!-- save  -->
+            <div
+              class="card d-flex justify-content-center"
+              style="width: 25rem"
+            >
+              <form
+                action="/admin/product"
+                method="POST"
+                enctype="multipart/form-data"
+              >
+                <img
+                  id="uploadPreview"
+                  class="card-img-top"
+                  style="width: 100%; cursor: pointer; display: none"
+                  onclick="clickUploadFile()"
+                />
+                <div
+                  id="boxUpload"
+                  style="
+                    display: flex;
+                    justify-content: center;
+                    align-items: center;
+                    height: 250px;
+                    width: 100%;
+                    color: #000;
+                    background-color: rgb(221, 221, 221);
+                    cursor: pointer;
+                  "
+                  onclick="clickUploadFile()"
+                >
+                  NO PHOTO AVAILABLE
+                </div>
+                <input
+                  type="file"
+                  id="image"
+                  name="image"
+                  onchange="previewImage()"
+                  hidden
+                />
+                <div class="card-body p-4">
+                  <div class="text-center">
+                    <input
+                      type="text"
+                      class="form-control"
+                      name="name"
+                      placeholder="name"
+                      required
+                    />
+                  </div>
+                  <div class="text-center pt-3">
+                    <textarea
+                      class="form-control"
+                      name="description"
+                      placeholder="description"
+                      required
+                    ></textarea>
+                  </div>
+                  <div class="input-group pt-3">
+                    <span class="input-group-text">฿</span>
+                    <input
+                      type="number"
+                      class="form-control"
+                      name="price"
+                      placeholder="price"
+                      required
+                    />
+                  </div>
+                </div>
+                <div class="card-footer p-4 pt-0 border-top-0 bg-transparent">
+                  <button
+                    class="btn btn-light"
+                    type="submit"
+                    style="width: 100%"
+                  >
+                    SAVE
+                  </button>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- show -->
+    <table class="table table-striped">
+      <thead class="table-dark">
+        <tr class="text-center">
+          <th scope="col">picture</th>
+          <th scope="col">name</th>
+          <th scope="col">description</th>
+          <th scope="col">price</th>
+          <th scope="col">action</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% for (let product of products) {%>
+        <tr>
+          <td>
+            <img
+              class="card-img-top"
+              src="/upload/<%= product.picture %>"
+              style="width: 100%; min-height: 250px; max-height: 18rem"
+            />
+          </td>
+          <td><%= product.name %></td>
+          <td><%= product.description %></td>
+          <td><%= product.price %></td>
+          <td>
+            <div class="d-flex justify-content-center align-items-center">
+              <button
+                class="btn btn-warning"
+                type="button"
+                style="margin-right: 5px"
+                data-bs-toggle="modal"
+                data-bs-target="#editProductModal"
+                onclick="editProduct('<%= product.id %>', '<%= product.name %>', '<%= product.description %>', '<%= product.price %>', '<%= product.picture %>')"
+              >
+                EDIT
+              </button>
+              <button
+                class="btn btn-danger"
+                type="button"
+                style="margin-right: 5px"
+                onclick="deleteProductById('<%= product.id %>', '<%= product.name %>')"
+              >
+                DELETE
+              </button>
+            </div>
+          </td>
+        </tr>
+        <% } %>
+      </tbody>
+    </table>
+
+    <!-- edit  -->
+    <div
+      class="modal fade"
+      id="editProductModal"
+      tabindex="-1"
+      aria-labelledby="editProductModal"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLabel">Edit Product</h5>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+              aria-label="Close"
+            ></button>
+          </div>
+          <div class="modal-body">
+            <div class="modal-body d-flex justify-content-center">
+              <!-- edit  -->
+              <div
+                class="card d-flex justify-content-center"
+                style="width: 25rem"
+              >
+                <form
+                  action="/admin/product/update"
+                  method="POST"
+                  enctype="multipart/form-data"
+                >
+                  <img
+                    id="uploadPreviewEdit"
+                    class="card-img-top"
+                    style="width: 100%; cursor: pointer; display: none"
+                    onclick="clickUploadFileEdit()"
+                  />
+                  <div
+                    id="boxUploadEdit"
+                    style="
+                      display: flex;
+                      justify-content: center;
+                      align-items: center;
+                      height: 250px;
+                      width: 100%;
+                      color: #000;
+                      background-color: rgb(221, 221, 221);
+                      cursor: pointer;
+                    "
+                    onclick="clickUploadFileEdit()"
+                  >
+                    NO PHOTO AVAILABLE
+                  </div>
+                  <input id="idEdit" name="id" hidden required/>
+                  <input
+                    id="imageEdit"
+                    type="file"
+                    name="image"
+                    onchange="previewImageEdit()"
+                    hidden
+                  />
+                  <div class="card-body p-4">
+                    <div class="text-center">
+                      <input
+                        id="nameEdit"
+                        type="text"
+                        class="form-control"
+                        name="name"
+                        placeholder="name"
+                        required
+                      />
+                    </div>
+                    <div class="text-center pt-3">
+                      <textarea
+                        id="descriptionEdit"
+                        class="form-control"
+                        name="description"
+                        placeholder="description"
+                        required
+                      ></textarea>
+                    </div>
+                    <div class="input-group pt-3">
+                      <span class="input-group-text">฿</span>
+                      <input
+                        id="priceEdit"
+                        type="number"
+                        class="form-control"
+                        name="price"
+                        placeholder="price"
+                        required
+                      />
+                    </div>
+                  </div>
+                  <div class="card-footer p-4 pt-0 border-top-0 bg-transparent">
+                    <button
+                      class="btn btn-light"
+                      type="submit"
+                      style="width: 100%"
+                    >
+                      SAVE
+                    </button>
+                  </div>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<script>
+  function previewImage() {
+    var reader = new FileReader();
+    reader.readAsDataURL(document.getElementById("image").files[0]);
+    reader.onload = function (e) {
+      document.getElementById("boxUpload").style.display = "none";
+      document.getElementById("uploadPreview").style.display = "";
+      document.getElementById("uploadPreview").src = e.target.result;
+    };
+  }
+
+  function clickUploadFile() {
+    document.getElementById("image").click();
+  }
+
+  function previewImageEdit() {
+    var reader = new FileReader();
+    reader.readAsDataURL(document.getElementById("imageEdit").files[0]);
+    reader.onload = function (e) {
+      document.getElementById("boxUploadEdit").style.display = "none";
+      document.getElementById("uploadPreviewEdit").style.display = "";
+      document.getElementById("uploadPreviewEdit").src = e.target.result;
+    };
+  }
+
+  function clickUploadFileEdit() {
+    document.getElementById("imageEdit").click();
+  }
+
+  function editProduct(id, name, description, price, picture) {
+    document.getElementById("idEdit").value = id;
+    document.getElementById("nameEdit").value = name;
+    document.getElementById("descriptionEdit").value = description;
+    document.getElementById("priceEdit").value = price;
+
+    if (picture) {
+      document.getElementById("boxUploadEdit").style.display = "none";
+      document.getElementById("uploadPreviewEdit").style.display = "flex";
+      document.getElementById("uploadPreviewEdit").src = `/upload/${picture}`;
+    } else {
+      document.getElementById("boxUploadEdit").style.display = "flex";
+      document.getElementById("uploadPreviewEdit").style.display = "none";
+    }
+  }
+
+  function deleteProductById(id, name) {
+    let text = `Do you want to delete ${name} ?`;
+    if (confirm(text) == true) {
+      fetch("/admin/product/" + id, {
+        method: "DELETE",
+      })
+        .then((res) => res.text())
+        .then((res) => location.reload());
+    }
+  }
+</script>
+
+<style>
+  thead th {
+    color: #fff;
+  }
+</style>

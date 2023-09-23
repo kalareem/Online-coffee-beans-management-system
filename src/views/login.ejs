@@ -1,0 +1,72 @@
+<%- include('./components/bootstrap'); %>
+
+<section class="vh-100">
+  <div class="container-fluid">
+    <div class="row d-flex justify-content-center align-items-center">
+      <div class="col-sm-6 text-black">
+        <div class="d-flex align-items-center justify-content-center">
+          <form style="width: 34rem" action="/login" method="POST">
+            <h3 class="fw-normal mb-3 pb-3" style="letter-spacing: 1px">
+              Sign In
+            </h3>
+
+            <div class="form-outline mb-4">
+              <label class="form-label">Email</label>
+              <input
+                id="email"
+                type="email"
+                name="email"
+                class="form-control form-control-lg"
+                required
+              />
+            </div>
+
+            <div class="form-outline mb-4">
+              <label class="form-label">Password</label>
+              <input
+                type="password"
+                name="password"
+                class="form-control form-control-lg"
+                required
+              />
+            </div>
+
+            <div id="validate" class="form-outline mb-4" style="color: red; display: none">
+              Invalid email or password.
+            </div>
+
+            <div class="row">
+              <p class="col-sm-7">
+                Don't have an account?
+                <a href="/register" class="link-info">Register here</a>
+              </p>
+              <div class="col-sm-5 d-flex justify-content-md-end">
+                <button class="btn btn-dark btn-lg btn-block" type="submit">
+                  SIGN IN
+                </button>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+      <div class="col-sm-6 px-0 d-none d-sm-block">
+        <img
+          src="/static/images/bg-login.png"
+          alt="Login image"
+          class="w-100 vh-100"
+          style="object-fit: cover; object-position: left"
+        />
+      </div>
+    </div>
+  </div>
+</section>
+
+<script>
+  var searchParams = new URLSearchParams(location.search);
+  var email = searchParams.get("email");
+  document.getElementById("email").value = email;
+  var validate = searchParams.get("validate");
+  if (validate == "false") {
+    document.getElementById("validate").style.display = "";
+  }
+</script>

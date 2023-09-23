@@ -1,0 +1,159 @@
+<%- include('./components/bootstrap'); %> <%-
+include('./components/navigation'); %>
+
+<section style="background-color: #eee">
+  <div class="container py-5">
+    <h4 class="text-center mb-5"><strong>YOUR CART</strong></h4>
+
+    <div class="container py-5 h-100">
+      <div class="row d-flex justify-content-center align-items-center">
+        <div class="col">
+          <div class="card">
+            <div class="card-body p-4">
+              <div class="row">
+                <div class="col-lg-7">
+                  <div
+                    class="d-flex justify-content-between align-items-center mb-4"
+                  >
+                    <div>
+                      <p class="mb-1">Shopping cart</p>
+                    </div>
+                    <div>
+                      <p class="mb-0">You have <%= amount %> items</p>
+                    </div>
+                  </div>
+
+                  <% for (let item of items) {%>
+                  <div class="card mb-3">
+                    <div class="card-body">
+                      <div class="d-flex justify-content-between">
+                        <div class="d-flex flex-row align-items-center">
+                          <div>
+                            <img
+                              src="/upload/<%= item.picture %>"
+                              alt="<%= item.name %>"
+                              class="img-fluid rounded-3"
+                              style="width: 65px"
+                            />
+                          </div>
+                          <div class="ms-3">
+                            <h5><%= item.name %></h5>
+                            <p class="small mb-0"><%= item.description %></p>
+                          </div>
+                        </div>
+                        <div
+                          class="d-flex flex-row align-items-center justify-content-center"
+                        >
+                          <div style="width: 50px; display: flex">
+                            <h5
+                              class="fw-normal mb-0 card"
+                              style="cursor: pointer; padding: 5px"
+                              onclick="changeQuantityItem('<%= item.cart_id %>', '<%= item.product_id %>', '<%= item.name %>', '<%= item.quantity %>')"
+                            >
+                              <%= item.quantity %>
+                            </h5>
+                          </div>
+                          <div style="width: 100px">
+                            <h5 class="mb-0"><%= item.price %></h5>
+                          </div>
+                          <a href="#!" style="color: #cecece"
+                            ><i
+                              class="fas fa-trash-alt icon-delete"
+                              onclick="deleteItemById('<%= item.cart_id %>', '<%= item.product_id %>', '<%= item.name %>')"
+                            ></i
+                          ></a>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <% } %>
+                </div>
+
+                <div class="col-lg-5">
+                  <div class="card bg-dark text-white rounded-3">
+                    <div class="card-body">
+                      <div
+                        class="d-flex justify-content-between align-items-center mb-4"
+                      >
+                        <h5 class="mb-0">Summary</h5>
+                      </div>
+
+                      <hr class="my-4" />
+
+                      <div class="d-flex justify-content-between">
+                        <p class="mb-2">Subtotal</p>
+                        <p class="mb-2"><%= subtotal %></p>
+                      </div>
+                    </div>
+
+                    <div
+                      class="card-footer p-4 pt-0 border-top-0 bg-transparent"
+                    >
+                      <button
+                        class="btn btn-light btn-block"
+                        type="button"
+                        style="width: 100%"
+                        onclick="goCheckout()"
+                      >
+                        <span
+                          >Checkout
+                          <i class="fas fa-long-arrow-alt-right ms-2"></i
+                        ></span>
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<%- include('./components/footer'); %>
+
+<style>
+  .icon-delete:hover {
+    color: red;
+  }
+</style>
+
+<script>
+  function changeQuantityItem(cart_id, product_id, name, quantity) {
+    var quantity = parseInt(
+      prompt(`Do you want to change the number of ${name} ?`, quantity)
+    );
+    if (!isNaN(quantity)) {
+      fetch(`/cart`, {
+        method: "POST",
+        body: JSON.stringify({
+          cartId: cart_id,
+          productId: product_id,
+          quantity: quantity,
+        }),
+        headers: {
+          "Content-type": "application/json; charset=UTF-8",
+        },
+      })
+        .then((res) => res.json())
+        .then((res) => location.reload());
+    }
+  }
+
+  function deleteItemById(cart_id, product_id, name) {
+    let text = `Do you want to delete ${name} ?`;
+    if (confirm(text) == true) {
+      fetch(`/cart/item/${cart_id}/product/${product_id}`, {
+        method: "DELETE",
+      })
+        .then((res) => res.text())
+        .then((res) => location.reload());
+    }
+  }
+
+  function goCheckout() {
+    window.location.href = "/checkout";
+  }
+</script>
